@@ -37,6 +37,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
@@ -56,4 +59,40 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Coil
+    implementation(libs.coil.compose)
+
+    val lifecycle_version = "2.8.7" // Or latest
+    val compose_version = "1.7.8" // Or match your Compose version
+
+    // ViewModel + Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // LiveData
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.runtime.livedata)
+
+    // Pager
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+
+    // Gson
+    implementation (libs.gson)
+
+    // Constraint layout Compose
+    implementation(libs.androidx.constraintlayout.compose)
+
+    // Compose UI Tooling
+    debugImplementation(libs.ui.tooling)
+
+    // Compose Material 3
+    implementation(libs.material3)
 }
