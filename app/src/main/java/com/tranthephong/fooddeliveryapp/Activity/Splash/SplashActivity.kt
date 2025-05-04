@@ -1,11 +1,8 @@
-package com.tranthephong.fooddeliveryapp.Activity
+package com.tranthephong.fooddeliveryapp.Activity.Splash
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,9 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.tranthephong.fooddeliveryapp.MainActivity
+import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
+import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
 import com.tranthephong.fooddeliveryapp.R
 
 class SplashActivity : BaseActivity() {

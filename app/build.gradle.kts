@@ -66,7 +66,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Coil
-    implementation(libs.coil.compose)
+    implementation(libs.coil.kt.coil.compose)
 
     val lifecycle_version = "2.8.7" // Or latest
     val compose_version = "1.7.8" // Or match your Compose version
