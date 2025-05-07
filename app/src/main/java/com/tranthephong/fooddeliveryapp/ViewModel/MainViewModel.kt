@@ -2,6 +2,8 @@ package com.tranthephong.fooddeliveryapp.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.tranthephong.fooddeliveryapp.Model.CategoryModel
+import com.tranthephong.fooddeliveryapp.Model.ItemModel
 import com.tranthephong.fooddeliveryapp.Model.SliderModel
 import com.tranthephong.fooddeliveryapp.Repository.MainRepository
 
@@ -10,5 +12,13 @@ class MainViewModel(): ViewModel() {
 
     fun loadBanner():LiveData<MutableList<SliderModel>>{
         return repository.loadBanner()
+    }
+
+    fun loadCategory():LiveData<MutableList<CategoryModel>>{
+        return repository.loadCategory()
+    }
+
+    fun loadItem():LiveData<MutableList<ItemModel>>{
+        return repository.loadItem()
     }
 }
