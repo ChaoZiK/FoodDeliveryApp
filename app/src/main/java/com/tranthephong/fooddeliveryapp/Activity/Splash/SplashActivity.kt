@@ -29,9 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
-import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
+import com.tranthephong.fooddeliveryapp.Activity.Authentication.LoginActivity
 import com.tranthephong.fooddeliveryapp.R
 
+
+//import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
 class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,8 @@ class SplashActivity : BaseActivity() {
         setContent {
             SplashScreen(
                 onClick = {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    //startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                 }
             )
         }

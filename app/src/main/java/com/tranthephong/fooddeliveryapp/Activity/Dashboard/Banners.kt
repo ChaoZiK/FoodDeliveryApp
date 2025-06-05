@@ -56,13 +56,14 @@ fun AutoSlidingCarausel(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp, bottom = 16.dp)
+                    .padding(top = 16.dp)
                     .height(150.dp)
             )
         }
         DotIndicator(
             modifier= Modifier
                 .padding(horizontal = 8.dp)
+                .padding(bottom = 16.dp)
                 .align(Alignment.CenterHorizontally),
             totalDots = banners.size,
             selectedIndex = if(isDragged) pagerState.currentPage else pagerState.targetPage,

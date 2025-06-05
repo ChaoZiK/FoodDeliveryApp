@@ -1,10 +1,10 @@
 package com.tranthephong.fooddeliveryapp.Activity.Dashboard
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,8 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,16 +34,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
-import com.tranthephong.fooddeliveryapp.Model.ItemModel
+import com.tranthephong.fooddeliveryapp.Activity.Detail.DetailActivity
+import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
 
 @Composable
-fun ListItems(items:List<ItemModel>){
+fun ListItemsFullSizeVertical(items:List<ItemsModel>) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(items.size) { index: Int ->
+            Item(items, index)
+        }
+    }
+}
+
+@Composable
+fun ListItems(items:List<ItemsModel>){
     LazyRow(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top=8.dp),
+            .padding(top=24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
@@ -50,41 +67,10 @@ fun ListItems(items:List<ItemModel>){
             Item(items, index)
         }
     }
-//    Column(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(top=8.dp)
-//    ) {
-//        // First row
-//        LazyRow(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-//        ) {
-//            // Show first half of items
-//            val firstRowItems = items.take(items.size / 2)
-//            items(firstRowItems.size) { index ->
-//                Item(items, index)
-//            }
-//        }
-//
-//        // Second row
-//        LazyRow(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.spacedBy(16.dp),
-//            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-//        ) {
-//            // Show second half of items
-//            val secondRowItems = items.drop(items.size / 2)
-//            items(secondRowItems.size) { index ->
-//                Item(items, index + (items.size / 2))
-//            }
-//        }
-//    }
 }
 
 @Composable
-fun Item(items:List<ItemModel>, pos:Int){
+fun Item(items:List<ItemsModel>, pos:Int){
     val context=LocalContext.current
     val item = items[pos]
 
@@ -98,12 +84,15 @@ fun Item(items:List<ItemModel>, pos:Int){
             model = item.picUrl.firstOrNull(),
             contentDescription = null,
             modifier = Modifier
-                .width(120.dp)
+                .width(180.dp)
                 .background(colorResource(R.color.lightGrey), shape = RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
-                .height(120.dp)
+                .height(180.dp)
                 .clickable{
-
+                    val intent=Intent(context, DetailActivity::class.java).apply {
+                        putExtra("object",item)
+                    }
+                    startActivity(context, intent, null)
                 }, contentScale = ContentScale.Crop
         )
 

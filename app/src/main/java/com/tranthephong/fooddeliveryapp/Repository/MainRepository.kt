@@ -6,32 +6,34 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import com.tranthephong.fooddeliveryapp.Model.CategoryModel
-import com.tranthephong.fooddeliveryapp.Model.ItemModel
+import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.Model.SliderModel
 
 class MainRepository {
 
-    private val firebaseDatabase = FirebaseDatabase.getInstance("https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app")
+    private val firebaseDatabase =
+        FirebaseDatabase.getInstance("https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app")
 
-    fun loadBanner():LiveData<MutableList<SliderModel>>{
-        val listData=MutableLiveData<MutableList<SliderModel>>()
-        val ref=firebaseDatabase.getReference("Banner")
+    fun loadBanner(): LiveData<MutableList<SliderModel>> {
+        val listData = MutableLiveData<MutableList<SliderModel>>()
+        val ref = firebaseDatabase.getReference("Banner")
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lists= mutableListOf<SliderModel>()
-                for (data in snapshot.children){
-                    val item=data.getValue(SliderModel::class.java)
-                    item?.let {lists.add(it)}
+                val lists = mutableListOf<SliderModel>()
+                for (data in snapshot.children) {
+                    val item = data.getValue(SliderModel::class.java)
+                    item?.let { lists.add(it) }
 //                    val url = data.child("url").getValue(String::class.java)
 //                    if (url != null) {
 //                        lists.add(SliderModel(url))
 //                    }
                 }
                 Log.d("FIREBASE_DEBUG", "Banner list size: ${lists.size}")
-                listData.value=lists
+                listData.value = lists
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -41,18 +43,18 @@ class MainRepository {
         return listData
     }
 
-    fun loadCategory():LiveData<MutableList<CategoryModel>>{
-        val listData=MutableLiveData<MutableList<CategoryModel>>()
-        val ref=firebaseDatabase.getReference("Category")
+    fun loadCategory(): LiveData<MutableList<CategoryModel>> {
+        val listData = MutableLiveData<MutableList<CategoryModel>>()
+        val ref = firebaseDatabase.getReference("Category")
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lists= mutableListOf<CategoryModel>()
-                for (data in snapshot.children){
-                    val item=data.getValue(CategoryModel::class.java)
-                    item?.let {lists.add(it)}
+                val lists = mutableListOf<CategoryModel>()
+                for (data in snapshot.children) {
+                    val item = data.getValue(CategoryModel::class.java)
+                    item?.let { lists.add(it) }
                 }
-                listData.value=lists
+                listData.value = lists
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -62,24 +64,49 @@ class MainRepository {
         return listData
     }
 
-    fun loadItem():LiveData<MutableList<ItemModel>>{
-        val listData=MutableLiveData<MutableList<ItemModel>>()
-        val ref=firebaseDatabase.getReference("Items")
+    fun loadItem(): LiveData<MutableList<ItemsModel>> {
+        val listData = MutableLiveData<MutableList<ItemsModel>>()
+        val ref = firebaseDatabase.getReference("Items")
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val lists= mutableListOf<ItemModel>()
-                for (data in snapshot.children){
-                    val item=data.getValue(ItemModel::class.java)
-                    item?.let {lists.add(it)}
+                val lists = mutableListOf<ItemsModel>()
+                for (data in snapshot.children) {
+                    val item = data.getValue(ItemsModel::class.java)
+                    item?.let { lists.add(it) }
                 }
-                listData.value=lists
+                listData.value = lists
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Failed to read item: ${error.message}")
             }
         })
+        return listData
+    }
+
+    fun loadFiltered(id: String): LiveData<MutableList<ItemsModel>> {
+        val listData = MutableLiveData<MutableList<ItemsModel>>()
+        val ref = firebaseDatabase.getReference("Items")
+        val query: Query = ref.orderByChild("categoryId").equalTo(id)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val lists = mutableListOf<ItemsModel>()
+                for (childSnapshot in snapshot.children) {
+                    val list = childSnapshot.getValue(ItemsModel::class.java)
+                    if (list != null) {
+                        lists.add(list)
+                    }
+                }
+                listData.value = lists
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
         return listData
     }
 }

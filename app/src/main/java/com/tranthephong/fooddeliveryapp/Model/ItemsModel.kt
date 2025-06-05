@@ -2,7 +2,7 @@ package com.tranthephong.fooddeliveryapp.Model
 
 import java.io.Serializable
 
-data class ItemModel(
+data class ItemsModel(
     var title:String="",
     var description:String="",
     var picUrl:ArrayList<String> = ArrayList(),
@@ -12,4 +12,5 @@ data class ItemModel(
     var numberInCart:Int=0,
     var showRecommended:Boolean=false,
     var categoryId:String="",
+    var category:ArrayList<String> = ArrayList()
 ): Serializable

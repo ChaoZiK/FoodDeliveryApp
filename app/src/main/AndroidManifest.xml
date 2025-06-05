@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,21 +15,40 @@
         android:theme="@style/Theme.FoodDeliveryApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.Favorite.FavoriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Authentication.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Authentication.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Cart.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ListItems.ListItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Detail.DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Splash.SplashActivity"
-            android:exported="true" ><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activity.Dashboard.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FoodDeliveryApp">
-        </activity>
+            android:theme="@style/Theme.FoodDeliveryApp" />
     </application>
 
 </manifest>

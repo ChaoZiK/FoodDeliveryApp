@@ -1,5 +1,6 @@
 package com.tranthephong.fooddeliveryapp.Activity.Dashboard
 
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.background
@@ -28,6 +29,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
+import com.tranthephong.fooddeliveryapp.Activity.ListItems.ListItemsActivity
 import com.tranthephong.fooddeliveryapp.Model.CategoryModel
 import com.tranthephong.fooddeliveryapp.R
 
@@ -47,7 +50,11 @@ fun CategoryList(categories: SnapshotStateList<CategoryModel>) {
                 onClick = {
                     selectedIndex = index
                     Handler(Looper.getMainLooper()).postDelayed({
-
+                        val intent = Intent(context, ListItemsActivity::class.java).apply {
+                            putExtra("id", categories[index].id.toString())
+                            putExtra("title", categories[index].title)
+                        }
+                        startActivity(context, intent, null)
                     }, 500)
 
                 }
