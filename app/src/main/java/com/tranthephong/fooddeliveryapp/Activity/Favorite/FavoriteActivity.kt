@@ -1,5 +1,6 @@
 package com.tranthephong.fooddeliveryapp.Activity.Favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
+import com.tranthephong.fooddeliveryapp.Activity.Detail.DetailActivity
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
 
@@ -121,8 +123,18 @@ fun FavoriteScreen(onBackClick: () -> Unit) {
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     items(favoriteItems) { item ->
-                        FavoriteItemRow(item)
-                        Spacer(modifier = Modifier.height(12.dp))
+                        FavoriteItemRow(
+                            item = item,
+                            onClick = {
+                                // e.g. navigate back to DetailActivity:
+                                val ctx = context
+                                ctx.startActivity(
+                                    Intent(ctx, DetailActivity::class.java)
+                                        .putExtra("object", it)
+                                )
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
