@@ -35,7 +35,7 @@ class FavoriteActivity : BaseActivity() {
             FavoriteScreen(onBackClick = { finish() })
         }
     }
-}git add
+}
 
 @Composable
 fun FavoriteScreen(onBackClick: () -> Unit) {
