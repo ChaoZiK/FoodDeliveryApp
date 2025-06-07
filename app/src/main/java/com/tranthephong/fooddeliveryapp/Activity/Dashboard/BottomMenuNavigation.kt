@@ -18,8 +18,10 @@ import com.tranthephong.fooddeliveryapp.R
 @Composable
 fun BottomMenu(
     modifier: Modifier,
+    onHomeClick: () -> Unit,
     onCartClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    onProfile: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -30,10 +32,10 @@ fun BottomMenu(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BottomMenuItem(icon = painterResource(R.drawable.home), onItemClick = null)
+        BottomMenuItem(icon = painterResource(R.drawable.home), onItemClick = onHomeClick)
         BottomMenuItem(icon = painterResource(R.drawable.favorite), onItemClick = onFavoriteClick)
         BottomMenuItem(icon = painterResource(R.drawable.cart), onItemClick = onCartClick)
-        BottomMenuItem(icon = painterResource(R.drawable.profile), onItemClick = null)
+        BottomMenuItem(icon = painterResource(R.drawable.profile), onItemClick = onProfile)
     }
 }
 

@@ -35,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.Activity.Cart.CartActivity
 import com.tranthephong.fooddeliveryapp.Activity.Favorite.FavoriteActivity
+import com.tranthephong.fooddeliveryapp.Activity.Profile.ProfileActivity
 import com.tranthephong.fooddeliveryapp.Model.CategoryModel
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.Model.SliderModel
@@ -52,6 +53,9 @@ class MainActivity : BaseActivity() {
                 },
                 onFavoriteClick = {
                     startActivity(Intent(this, FavoriteActivity::class.java))
+                },
+                onProfile = {
+                    startActivity(Intent(this, ProfileActivity::class.java))
                 }
             )
         }
@@ -62,7 +66,8 @@ class MainActivity : BaseActivity() {
 @Preview
 fun DashBoardScreen(
     onCartClick: () -> Unit = {},
-    onFavoriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {},
+    onProfile: () -> Unit = {}
 ) {
     val viewModel: MainViewModel = viewModel()
 
@@ -193,7 +198,9 @@ fun DashBoardScreen(
                     bottom.linkTo(parent.bottom)
                 },
             onCartClick = onCartClick,
-            onFavoriteClick = onFavoriteClick
+            onFavoriteClick = onFavoriteClick,
+            onProfile = onProfile,
+            onHomeClick = {}
         )
     }
 }

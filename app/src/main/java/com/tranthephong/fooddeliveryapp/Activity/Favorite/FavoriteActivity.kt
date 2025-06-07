@@ -6,12 +6,23 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.Activity.Detail.DetailActivity
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
@@ -46,11 +60,13 @@ fun FavoriteScreen(onBackClick: () -> Unit) {
     var isLoading by remember { mutableStateOf(true) }
 
     val user = FirebaseAuth.getInstance().currentUser
-    val database = FirebaseDatabase.getInstance("https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app")
+    val database =
+        FirebaseDatabase.getInstance("https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app")
 
     LaunchedEffect(user) {
         if (user == null) {
-            Toast.makeText(context, "Please log in to see favorites", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Please log in to see your favorite items", Toast.LENGTH_SHORT)
+                .show()
             isLoading = false
             return@LaunchedEffect
         }
@@ -111,11 +127,13 @@ fun FavoriteScreen(onBackClick: () -> Unit) {
                     CircularProgressIndicator()
                 }
             }
+
             favoriteItems.isEmpty() -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text("No favorite items yet", fontSize = 18.sp, color = Color.Gray)
                 }
             }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier
