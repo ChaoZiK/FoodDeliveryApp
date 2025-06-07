@@ -3,6 +3,7 @@ package com.tranthephong.fooddeliveryapp.Activity.Detail
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.Activity.Cart.CartActivity
 import com.tranthephong.fooddeliveryapp.Helper.ManagementCart
@@ -43,12 +46,20 @@ class DetailActivity : BaseActivity() {
     private lateinit var item: ItemsModel
     private lateinit var managementCart: ManagementCart
     private val TAG = "DetailActivity"
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         item = intent.getSerializableExtra("object") as ItemsModel
         Log.d(TAG, "DetailActivity created with item: ${item.title}")
         managementCart = ManagementCart(this)
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance(
+            "https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app"
+        )
+
+        val item = intent.getSerializableExtra("object") as ItemsModel
 
         setContent {
             DetailScreen(
@@ -61,6 +72,34 @@ class DetailActivity : BaseActivity() {
                 },
                 onCartClick = {
                     startActivity(Intent(this, CartActivity::class.java))
+                },
+                onFavoriteClick = { itemToFavorite, shouldBeFavorite ->
+                    val user = auth.currentUser
+                    if (user == null) {
+                        Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
+                        return@DetailScreen
+                    }
+
+                    val ref = database
+                        .getReference("Users/${user.uid}/Favorites/${itemToFavorite.id}")
+
+                    if (shouldBeFavorite) {
+                        ref.setValue(itemToFavorite).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this, "Failed to add favorite", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        ref.removeValue().addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(this, "Removed from Favorites", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this, "Failed to remove favorite", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
                 }
             )
         }
@@ -72,10 +111,28 @@ private fun DetailScreen(
     item: ItemsModel,
     onBackClick: () -> Unit,
     onAddToCartClick: () -> Unit,
-    onCartClick: () -> Unit
+    onCartClick: () -> Unit,
+    onFavoriteClick: (ItemsModel, Boolean) -> Unit
 ) {
     var selectedImageUrl by remember { mutableStateOf(item.picUrl.first()) }
     var selectedModelIndex by remember { mutableStateOf(-1) }
+    val context = LocalContext.current
+    val user = FirebaseAuth.getInstance().currentUser
+    val database = FirebaseDatabase.getInstance(
+        "https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app"
+    )
+    var isFavorite by remember { mutableStateOf(false) }
+
+    LaunchedEffect(user) {
+        if (user != null) {
+            val ref = database.getReference("Users/${user.uid}/Favorites/${item.id}")
+            ref.get().addOnSuccessListener { snapshot ->
+                isFavorite = snapshot.exists()
+            }.addOnFailureListener {
+                Toast.makeText(context, "Failed to load favorite status", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -83,7 +140,18 @@ private fun DetailScreen(
             .background(Color.White)
             .verticalScroll(rememberScrollState())
     ) {
-        HeaderSection(selectedImageUrl,item.picUrl,onBackClick) {selectedImageUrl = it }
+        HeaderSection(
+            selectedImageUrl = selectedImageUrl,
+            imageUrls = item.picUrl,
+            onBackClick = onBackClick,
+            onImageSelected = { selectedImageUrl = it },
+            isFavorite = isFavorite,
+            onFavoriteClick = {
+                val newFavoriteState = !isFavorite
+                isFavorite = newFavoriteState
+                onFavoriteClick(item, newFavoriteState)
+            }
+        )
 
         InfoSection(item)
 
@@ -107,7 +175,9 @@ private fun HeaderSection(
     selectedImageUrl: String,
     imageUrls:List<String>,
     onBackClick: () -> Unit,
-    onImageSelected: (String) -> Unit
+    onImageSelected: (String) -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit
 ){
 
     ConstraintLayout(
@@ -138,10 +208,22 @@ private fun HeaderSection(
             top.linkTo(parent.top)
             start.linkTo(parent.start)
         })
-        FavoriteButton(Modifier.constrainAs(fav){
-            top.linkTo(parent.top)
-            end.linkTo(parent.end)
-        })
+//        FavoriteButton(Modifier.constrainAs(fav){
+//            top.linkTo(parent.top)
+//            end.linkTo(parent.end)
+//        })
+        val heartIcon = if (isFavorite) R.drawable.fbutton_on else R.drawable.fbutton_off
+        Image(
+            painter = painterResource(id = heartIcon),
+            contentDescription = "Favorite",
+            modifier = Modifier
+                .padding(top = 48.dp, end = 16.dp)
+                .clickable { onFavoriteClick() }
+                .constrainAs(fav) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                }
+        )
 
 
         LazyRow (modifier = Modifier
