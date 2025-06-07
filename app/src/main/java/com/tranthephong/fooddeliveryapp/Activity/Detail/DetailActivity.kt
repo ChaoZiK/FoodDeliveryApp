@@ -123,14 +123,27 @@ private fun DetailScreen(
     )
     var isFavorite by remember { mutableStateOf(false) }
 
-    LaunchedEffect(user) {
-        if (user != null) {
+//    LaunchedEffect(user) {
+//        if (user != null) {
+//            val ref = database.getReference("Users/${user.uid}/Favorites/${item.id}")
+//            ref.get().addOnSuccessListener { snapshot ->
+//                isFavorite = snapshot.exists()
+//            }.addOnFailureListener {
+//                Toast.makeText(context, "Failed to load favorite status", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
+    LaunchedEffect(user, item.id) {
+        isFavorite = false    // reset state immediately
+        if (user != null && item.id.isNotBlank()) {
             val ref = database.getReference("Users/${user.uid}/Favorites/${item.id}")
-            ref.get().addOnSuccessListener { snapshot ->
-                isFavorite = snapshot.exists()
-            }.addOnFailureListener {
-                Toast.makeText(context, "Failed to load favorite status", Toast.LENGTH_SHORT).show()
-            }
+            ref.get()
+                .addOnSuccessListener { snapshot ->
+                    isFavorite = snapshot.exists()
+                }
+                .addOnFailureListener {
+                    // optional: log or toast
+                }
         }
     }
 

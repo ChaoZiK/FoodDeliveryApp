@@ -64,6 +64,26 @@ class MainRepository {
         return listData
     }
 
+    //    fun loadItem(): LiveData<MutableList<ItemsModel>> {
+//        val listData = MutableLiveData<MutableList<ItemsModel>>()
+//        val ref = firebaseDatabase.getReference("Items")
+//
+//        ref.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val lists = mutableListOf<ItemsModel>()
+//                for (data in snapshot.children) {
+//                    val item = data.getValue(ItemsModel::class.java)
+//                    item?.let { lists.add(it) }
+//                }
+//                listData.value = lists
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.e("Firebase", "Failed to read item: ${error.message}")
+//            }
+//        })
+//        return listData
+//    }
     fun loadItem(): LiveData<MutableList<ItemsModel>> {
         val listData = MutableLiveData<MutableList<ItemsModel>>()
         val ref = firebaseDatabase.getReference("Items")
@@ -73,17 +93,21 @@ class MainRepository {
                 val lists = mutableListOf<ItemsModel>()
                 for (data in snapshot.children) {
                     val item = data.getValue(ItemsModel::class.java)
-                    item?.let { lists.add(it) }
+                    if (item != null) {
+                        // ← very important:
+                        item.id = data.key ?: ""
+                        lists.add(item)
+                    }
                 }
                 listData.value = lists
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Failed to read item: ${error.message}")
             }
         })
         return listData
     }
+
 
     fun loadFiltered(id: String): LiveData<MutableList<ItemsModel>> {
         val listData = MutableLiveData<MutableList<ItemsModel>>()
