@@ -1,4 +1,4 @@
-package com.tranthephong.fooddeliveryapp.Activity.Dashboard
+package com.tranthephong.fooddeliveryapp.Activity.Home
 
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -36,26 +36,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.AsyncImage
-import com.tranthephong.fooddeliveryapp.Activity.Detail.DetailActivity
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
 
 @Composable
-fun ListItemsFullSizeVertical(items:List<ItemsModel>) {
+fun ListItemsFullSizeVertical(
+    items: List<ItemsModel>,
+    onItemClick: (ItemsModel) -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(items.size) { index: Int ->
-            Item(items, index)
+        items(items.size) { index ->
+            Item(
+                item = items[index],
+                onClick = { onItemClick(items[index]) }
+            )
         }
     }
 }
 
 @Composable
-fun ListItems(items:List<ItemsModel>){
+fun ListItems(
+    items: List<ItemsModel>,
+    onItemClick: (ItemsModel) -> Unit
+) {
     LazyRow(
         modifier = Modifier
             .fillMaxSize()
@@ -63,18 +71,20 @@ fun ListItems(items:List<ItemsModel>){
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
-        items(items.size) { index: Int ->
-            Item(items, index)
+        items(items.size) { index ->
+            Item(
+                item = items[index],
+                onClick = { onItemClick(items[index]) }
+            )
         }
     }
 }
 
 @Composable
-fun Item(items:List<ItemsModel>, pos:Int){
-    val context=LocalContext.current
-    val item = items[pos]
-
-
+private fun Item(
+    item: ItemsModel,
+    onClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -82,18 +92,14 @@ fun Item(items:List<ItemsModel>, pos:Int){
     ) {
         AsyncImage(
             model = item.picUrl.firstOrNull(),
-            contentDescription = null,
+            contentDescription = item.title,
             modifier = Modifier
                 .width(180.dp)
                 .background(colorResource(R.color.lightGrey), shape = RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
                 .height(180.dp)
-                .clickable{
-                    val intent=Intent(context, DetailActivity::class.java).apply {
-                        putExtra("object",item)
-                    }
-                    startActivity(context, intent, null)
-                }, contentScale = ContentScale.Crop
+                .clickable(onClick = onClick),
+            contentScale = ContentScale.Crop
         )
 
         Text(
@@ -113,9 +119,11 @@ fun Item(items:List<ItemsModel>, pos:Int){
                 Image(painter = painterResource(R.drawable.star), contentDescription = null,
                     modifier = Modifier.align(Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(items[pos].rating.toString()
-                , color = Color.Black,
-                    fontSize = 15.sp)
+                Text(
+                    text = item.rating.toString(),
+                    color = Color.Black,
+                    fontSize = 15.sp
+                )
             }
             Text(text = "$${item.price}",
                 color = colorResource(R.color.darkBrown),

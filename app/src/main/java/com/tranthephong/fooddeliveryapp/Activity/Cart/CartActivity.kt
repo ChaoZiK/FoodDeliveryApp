@@ -32,22 +32,10 @@ import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.Helper.ManagementCart
 import com.tranthephong.fooddeliveryapp.R
 
-class CartActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            CartScreen(ManagementCart(this),
-                onBackClick = {finish()})
-        }
-    }
-}
-
 @Composable
-fun CartScreen(
-    managementCart: ManagementCart = ManagementCart(LocalContext.current),
-    onBackClick:() -> Unit
-) {
+fun CartScreen() {
+    val context = LocalContext.current
+    val managementCart = remember { ManagementCart(context) }
     var cartItem = remember { mutableStateOf(managementCart.getListCart()) }
     val tax = remember {mutableStateOf(0.0)}
     
@@ -56,10 +44,11 @@ fun CartScreen(
 //        cartItem.value = managementCart.getListCart()
 //    }
 //
-//    // Add effect to update tax when cart items change
-//    LaunchedEffect(cartItem.value) {
-//        calculatorCart(managementCart, tax)
-//    }
+    // Add effect to update tax when cart items change
+    LaunchedEffect(cartItem.value) {
+        calculatorCart(managementCart, tax)
+    }
+
     calculatorCart(managementCart, tax)
     Column(
         modifier = Modifier
@@ -78,16 +67,6 @@ fun CartScreen(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp
-            )
-            Image(painter = painterResource(R.drawable.back_arrow),
-                contentDescription = null,
-                modifier = Modifier
-                    .constrainAs (backBtn) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .clickable{ onBackClick() }
             )
         }
         if(cartItem.value.isEmpty()){

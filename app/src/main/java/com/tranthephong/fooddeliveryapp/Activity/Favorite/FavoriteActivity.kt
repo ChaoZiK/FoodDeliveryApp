@@ -39,22 +39,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
-import com.tranthephong.fooddeliveryapp.Activity.Detail.DetailActivity
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
 
-class FavoriteActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            FavoriteScreen(onBackClick = { finish() })
-        }
-    }
-}
-
 @Composable
-fun FavoriteScreen(onBackClick: () -> Unit) {
+fun FavoriteScreen(
+    onItemClick:   (ItemsModel) -> Unit
+) {
     val context = LocalContext.current
     var favoriteItems by remember { mutableStateOf<List<ItemsModel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -106,18 +97,6 @@ fun FavoriteScreen(onBackClick: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp
             )
-
-            Image(
-                painter = painterResource(R.drawable.back_arrow),
-                contentDescription = "Back",
-                modifier = Modifier
-                    .clickable { onBackClick() }
-                    .constrainAs(backBtn) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-            )
         }
 
         // Content
@@ -143,14 +122,7 @@ fun FavoriteScreen(onBackClick: () -> Unit) {
                     items(favoriteItems) { item ->
                         FavoriteItemRow(
                             item = item,
-                            onClick = {
-                                // e.g. navigate back to DetailActivity:
-                                val ctx = context
-                                ctx.startActivity(
-                                    Intent(ctx, DetailActivity::class.java)
-                                        .putExtra("object", it)
-                                )
-                            }
+                            onClick = { onItemClick(item) }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }

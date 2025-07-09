@@ -3,7 +3,6 @@ package com.tranthephong.fooddeliveryapp.Activity.Profile
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,33 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.tranthephong.fooddeliveryapp.Activity.Cart.CartActivity
-import com.tranthephong.fooddeliveryapp.Activity.Dashboard.BottomMenu
-import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
-import com.tranthephong.fooddeliveryapp.Activity.Favorite.FavoriteActivity
+import com.tranthephong.fooddeliveryapp.Activity.Home.BottomMenu
 import com.tranthephong.fooddeliveryapp.R
-
-class ProfileActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            ProfileScreen(
-                onHomeClick = {
-                    startActivity(Intent(this, MainActivity::class.java))
-                },
-                onCartClick = {
-                    startActivity(Intent(this, CartActivity::class.java))
-                },
-                onFavoriteClick = {
-                    startActivity(Intent(this, FavoriteActivity::class.java))
-                }
-            )
-        }
-    }
-}
 
 @Composable
 fun ProfileScreen(
@@ -121,20 +95,5 @@ fun ProfileScreen(
                 }
             }
         }
-
-        // Fixed BottomMenu
-        BottomMenu(
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(bottomBar) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            onHomeClick = onHomeClick,
-            onCartClick = onCartClick,
-            onFavoriteClick = onFavoriteClick,
-            onProfile = {}
-        )
     }
 }

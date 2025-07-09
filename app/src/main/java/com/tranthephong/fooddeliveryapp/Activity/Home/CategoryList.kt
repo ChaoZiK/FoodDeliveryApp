@@ -1,4 +1,4 @@
-package com.tranthephong.fooddeliveryapp.Activity.Dashboard
+package com.tranthephong.fooddeliveryapp.Activity.Home
 
 import android.content.Intent
 import android.os.Handler

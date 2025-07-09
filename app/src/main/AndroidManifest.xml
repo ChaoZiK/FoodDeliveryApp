@@ -15,6 +15,12 @@
         android:theme="@style/Theme.FoodDeliveryApp"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Profile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Favorite.FavoriteActivity"
             android:exported="false" />
         <activity
@@ -45,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.Dashboard.MainActivity"
+            android:name=".Activity.Home.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.FoodDeliveryApp" />

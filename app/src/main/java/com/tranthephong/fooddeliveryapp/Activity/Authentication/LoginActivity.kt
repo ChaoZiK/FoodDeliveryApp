@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
+import com.tranthephong.fooddeliveryapp.MainActivity
 import com.tranthephong.fooddeliveryapp.R
 import kotlinx.coroutines.launch
 

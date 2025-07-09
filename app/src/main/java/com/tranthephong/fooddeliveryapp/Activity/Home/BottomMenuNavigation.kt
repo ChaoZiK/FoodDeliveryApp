@@ -1,4 +1,4 @@
-package com.tranthephong.fooddeliveryapp.Activity.Dashboard
+package com.tranthephong.fooddeliveryapp.Activity.Home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

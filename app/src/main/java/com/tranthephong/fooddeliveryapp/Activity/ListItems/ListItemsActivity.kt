@@ -2,7 +2,6 @@ package com.tranthephong.fooddeliveryapp.Activity.ListItems
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
-import com.tranthephong.fooddeliveryapp.Activity.Dashboard.ListItemsFullSizeVertical
+import com.tranthephong.fooddeliveryapp.Activity.Home.ListItemsFullSizeVertical
 import com.tranthephong.fooddeliveryapp.R
 import com.tranthephong.fooddeliveryapp.ViewModel.MainViewModel
 
@@ -109,7 +108,10 @@ private fun ListItemScreen(
                 CircularProgressIndicator()
             }
         } else {
-            ListItemsFullSizeVertical(items)
+            ListItemsFullSizeVertical(
+                items,
+                onItemClick = TODO()
+            )
         }
     }
 }
