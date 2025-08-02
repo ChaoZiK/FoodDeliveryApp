@@ -22,8 +22,9 @@ import androidx.compose.ui.unit.sp
 import com.tranthephong.fooddeliveryapp.R
 
 @Composable
-fun FooterSection(onAddToCartClick: () -> Unit, onCartClick: () -> Unit){
-    Row(verticalAlignment = Alignment.CenterVertically,
+fun FooterSection(onAddToCartClick: () -> Unit, onCartClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
@@ -32,18 +33,19 @@ fun FooterSection(onAddToCartClick: () -> Unit, onCartClick: () -> Unit){
             onClick = onAddToCartClick,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(R.color.green)
+                backgroundColor = colorResource(R.color.lightBlue)
             ),
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 8.dp)
                 .height(50.dp)
         ) {
-            Text("Add to Cart", fontSize = 18.sp)
+            Text("Add to Cart", fontSize = 18.sp, color = Color.White)
         }
-        IconButton(onClick = onCartClick,
+        IconButton(
+            onClick = onCartClick,
             modifier = Modifier.background(
-               colorResource(R.color.lightGrey),
+                colorResource(R.color.lightGrey),
                 shape = RoundedCornerShape(10.dp)
             )
         ) {

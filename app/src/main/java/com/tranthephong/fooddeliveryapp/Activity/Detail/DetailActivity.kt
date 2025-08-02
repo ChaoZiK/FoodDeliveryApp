@@ -4,12 +4,15 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -19,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -43,7 +47,6 @@ fun DetailScreenWrapper(
     item: ItemsModel
 ) {
     val context = LocalContext.current
-    // one-time remembers
     val managementCart by remember { mutableStateOf(ManagementCart(context)) }
     val auth by remember { mutableStateOf(FirebaseAuth.getInstance()) }
     val database by remember {
@@ -56,11 +59,7 @@ fun DetailScreenWrapper(
 
     DetailScreen(
         item = item,
-// DetailScreenWrapper.kt  (the arrow handler)
-//        onBackClick = { navController.popBackStack() },
         onBackClick = {
-            // pop everything up to "home" (excluding it),
-            // so you never replay Cart or Favorites
             navController.popBackStack(
                 route = Screen.Home.route,
                 inclusive = false
@@ -118,16 +117,14 @@ private fun DetailScreen(
     val database = FirebaseDatabase.getInstance(
         "https://fooddeliveryapp-4cc23-default-rtdb.asia-southeast1.firebasedatabase.app"
     )
-    val context = LocalContext.current
 
-    // re-check whenever `item.id` or user changes
     LaunchedEffect(auth.currentUser, item.id) {
         isFavorite = false
         auth.currentUser?.let { user ->
             val favRef = database.getReference("Users/${user.uid}/Favorites/${item.id}")
             favRef.get()
                 .addOnSuccessListener { snap -> isFavorite = snap.exists() }
-                .addOnFailureListener { /* ignore */ }
+                .addOnFailureListener {}
         }
     }
 
@@ -152,6 +149,8 @@ private fun DetailScreen(
 
         InfoSection(item = item)
 
+        Spacer(modifier = Modifier.height(24.dp))
+
         ModelSelector(
             models = item.category,
             selectedModelIndex = selectedModelIndex,
@@ -164,6 +163,8 @@ private fun DetailScreen(
             color = Color.Black,
             modifier = Modifier.padding(16.dp)
         )
+
+        Spacer(modifier = Modifier.weight(1f))
 
         FooterSection(
             onAddToCartClick = onAddToCartClick,
@@ -188,7 +189,7 @@ private fun HeaderSection(
             .height(430.dp)
             .padding(bottom = 16.dp)
     ) {
-        val (back, fav, mainImage, thumbnail) = createRefs()
+        val (back, fav, mainImage) = createRefs()
 
         Image(
             painter = rememberAsyncImagePainter(model = selectedImageUrl),
@@ -207,23 +208,24 @@ private fun HeaderSection(
                     start.linkTo(parent.start)
                 }
         )
-
-        Image(
-            painter = painterResource(R.drawable.back_arrow),
-            contentDescription = "Back",
+        Box(
             modifier = Modifier
                 .padding(top = 48.dp, start = 16.dp)
+                .size(36.dp)
+                .background(Color.White, shape = CircleShape)
                 .clickable { onBackClick() }
                 .constrainAs(back) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
-                }
-        )
-
-//        FavoriteButton(Modifier.constrainAs(fav){
-//            top.linkTo(parent.top)
-//            end.linkTo(parent.end)
-//        })
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(R.drawable.back_arrow),
+                contentDescription = "Back",
+                modifier = Modifier.size(20.dp)
+            )
+        }
         val heartIcon = if (isFavorite) R.drawable.fbutton_on else R.drawable.fbutton_off
         Image(
             painter = painterResource(id = heartIcon),
@@ -236,27 +238,5 @@ private fun HeaderSection(
                     end.linkTo(parent.end)
                 }
         )
-
-
-        LazyRow(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .background(
-                    color = colorResource(R.color.white), shape = RoundedCornerShape(10.dp)
-                )
-                .constrainAs(thumbnail) {
-                    bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-        ) {
-            items(imageUrls.size) { index ->
-                ImageThumbnail(
-                    imageUrls[index],
-                    isSelected = selectedImageUrl == imageUrls[index],
-                    onClick = { onImageSelected(imageUrls[index]) }
-                )
-            }
-        }
     }
 }

@@ -16,36 +16,36 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.tranthephong.fooddeliveryapp.Model.SliderModel
 import com.tranthephong.fooddeliveryapp.R
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
-import coil.compose.rememberAsyncImagePainter
 
 
 @Composable
-fun Banners(banners: List<SliderModel>){
-    AutoSlidingCarausel(banners = banners)
+fun Banners(banners: List<SliderModel>) {
+    AutoSlidingCarausel(modifier = Modifier.padding(top = 16.dp), banners = banners)
 }
 
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun AutoSlidingCarausel(
-    modifier: Modifier=Modifier.padding(top=16.dp),
-    banners:List<SliderModel>
-){
+    modifier: Modifier = Modifier,
+    banners: List<SliderModel>
+) {
     val pagerState = rememberPagerState(pageCount = { banners.size })
     val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
 
-    Column(modifier = modifier.fillMaxSize()){
-        HorizontalPager(state = pagerState){page->
+    Column(modifier = modifier.fillMaxSize()) {
+        HorizontalPager(state = pagerState) { page ->
             Image(
                 painter = rememberAsyncImagePainter(model = banners[page].url),
                 contentDescription = null,
@@ -58,12 +58,11 @@ fun AutoSlidingCarausel(
             )
         }
         DotIndicator(
-            modifier= Modifier
+            modifier = Modifier
                 .padding(horizontal = 8.dp)
-                .padding(bottom = 16.dp)
                 .align(Alignment.CenterHorizontally),
             totalDots = banners.size,
-            selectedIndex = if(isDragged) pagerState.currentPage else pagerState.targetPage,
+            selectedIndex = if (isDragged) pagerState.currentPage else pagerState.targetPage,
             dotSize = 8.dp
         )
     }
@@ -71,17 +70,20 @@ fun AutoSlidingCarausel(
 
 @Composable
 fun DotIndicator(
-    modifier:Modifier=Modifier,
-    totalDots:Int,
-    selectedIndex:Int,
+    modifier: Modifier = Modifier,
+    totalDots: Int,
+    selectedIndex: Int,
     selectedColor: Color = colorResource(R.color.darkBrown),
     unSelectedColor: Color = colorResource(R.color.grey),
     dotSize: Dp
-){
-    LazyRow(modifier = modifier.wrapContentSize()){
-        items(totalDots){index->
-            IndicatorDot(color = if(index==selectedIndex) selectedColor else unSelectedColor, size = dotSize)
-            if(index!=totalDots-1){
+) {
+    LazyRow(modifier = modifier.wrapContentSize()) {
+        items(totalDots) { index ->
+            IndicatorDot(
+                color = if (index == selectedIndex) selectedColor else unSelectedColor,
+                size = dotSize
+            )
+            if (index != totalDots - 1) {
                 Spacer(modifier = Modifier.padding(horizontal = 2.dp))
             }
         }
@@ -90,10 +92,10 @@ fun DotIndicator(
 
 @Composable
 fun IndicatorDot(
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     size: Dp,
     color: Color
-){
+) {
     Box(
         modifier = Modifier
             .size(size)

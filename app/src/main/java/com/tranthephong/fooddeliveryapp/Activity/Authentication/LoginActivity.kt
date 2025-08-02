@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -47,11 +48,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.tranthephong.fooddeliveryapp.MainActivity
 import com.tranthephong.fooddeliveryapp.R
+import com.tranthephong.fooddeliveryapp.Util.RememberPrefs
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -60,26 +66,61 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
         super.onCreate(savedInstanceState)
         setContent {
-            LoginScreen(
-                onSignUpClick = {
-                    startActivity(Intent(this, SignUpActivity::class.java))
-                },
-                onLoginClick = { email, password ->
-                    auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(this) {
-                            if (it.isSuccessful) {
-                                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
-                                finish()
+            val navController = rememberNavController()
 
-                            } else {
-                                Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT)
-                                    .show()
+            NavHost(navController, startDestination = "login") {
+                composable("login") {
+
+                    LoginScreen(
+                        navController = navController,
+                        onSignUpClick = {
+                            startActivity(
+                                Intent(this@LoginActivity, SignUpActivity::class.java)
+                            )
+                        },
+                        onLoginClick = { email, password, rememberMe ->
+                            auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(this@LoginActivity) { task ->
+                                    if (task.isSuccessful) {
+                                        RememberPrefs.setRemember(this@LoginActivity, rememberMe)
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Login Successful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        startActivity(
+                                            Intent(this@LoginActivity, MainActivity::class.java)
+                                        )
+                                        finish()
+                                    } else {
+                                        Toast.makeText(
+                                            this@LoginActivity,
+                                            "Login Unsuccessful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                        }
+                    )
+                }
+
+                composable("reset") {
+                    ResetPasswordScreen(
+                        navController = navController,
+                        onBackToLogin = { navController.popBackStack() }
+                    )
+                }
+
+                composable("resetConfirm") {
+                    ResetPasswordConfirmationScreen(
+                        onBackToLogin = {
+                            navController.navigate("login") {
+                                popUpTo("login") { inclusive = true }
                             }
                         }
+                    )
                 }
-            )
+            }
         }
     }
 }
@@ -87,8 +128,9 @@ class LoginActivity : AppCompatActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    navController: NavController,
     onSignUpClick: () -> Unit,
-    onLoginClick: (email: String, password: String) -> Unit
+    onLoginClick: (email: String, password: String, rememberMe: Boolean) -> Unit
 ) {
     val (rememberMe, onRememberMeChange) = remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
@@ -107,8 +149,8 @@ fun LoginScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF9DFD94), // light green top
-                            Color(0xFF939726)  // olive green bottom
+                            Color(0xFFF4FFFF),
+                            Color(0xFFD2FDFF)
                         )
                     )
                 )
@@ -144,7 +186,7 @@ fun LoginScreen(
                         Text("Email", modifier = Modifier.align(Alignment.Start))
                         TextField(
                             value = email,
-                            onValueChange = { email = it},
+                            onValueChange = { email = it },
                             label = { Text("Your email") },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
@@ -161,7 +203,7 @@ fun LoginScreen(
                         Text("Password", modifier = Modifier.align(Alignment.Start))
                         TextField(
                             value = password,
-                            onValueChange = { password = it},
+                            onValueChange = { password = it },
                             label = { Text("Your password") },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
@@ -181,12 +223,15 @@ fun LoginScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Checkbox(checked = rememberMe, onCheckedChange = onRememberMeChange)
+                                Checkbox(
+                                    checked = rememberMe,
+                                    onCheckedChange = onRememberMeChange
+                                )
                                 Text("Remember me")
                             }
                             Text(
                                 "Forgot password",
-                                modifier = Modifier.clickable { /* Handle forgot password */ })
+                                modifier = Modifier.clickable { navController.navigate("reset") })
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
@@ -199,14 +244,14 @@ fun LoginScreen(
                                     }
 
                                     else -> {
-                                        onLoginClick(email, password)
+                                        onLoginClick(email, password, rememberMe)
                                     }
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF00C452), // Background color
-                                contentColor = Color.White           // Text/icon color
+                                containerColor = colorResource(R.color.lightBlue),
+                                contentColor = Color.White
                             )
                         ) {
                             Text("Login", fontSize = 18.sp)
@@ -218,7 +263,7 @@ fun LoginScreen(
                                 withStyle(
                                     style = SpanStyle(
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Blue
+                                        color = Color.Black
                                     )
                                 ) {
                                     append("Sign up")

@@ -22,7 +22,7 @@ public class ManagementCart {
         Log.d(TAG, "Inserting item: " + item.getTitle());
         ArrayList<ItemsModel> listFood = getListCart();
         Log.d(TAG, "Current cart size: " + listFood.size());
-        
+
         boolean existAlready = false;
         int index = -1;
 
@@ -42,7 +42,7 @@ public class ManagementCart {
             listFood.add(item);
             Log.d(TAG, "Added new item to cart");
         }
-        
+
         tinyDB.putListObject("CartList", listFood);
         Log.d(TAG, "Saved cart. New size: " + listFood.size());
         Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show();
@@ -83,5 +83,9 @@ public class ManagementCart {
         }
         Log.d(TAG, "Calculated total fee: " + fee);
         return fee;
+    }
+
+    public void clearCart() {
+        tinyDB.remove("CartList");
     }
 }

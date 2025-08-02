@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -47,13 +48,13 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.userProfileChangeRequest
 import com.tranthephong.fooddeliveryapp.R
 import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
-        //auth = Firebase.auth
         auth = Firebase.auth
         super.onCreate(savedInstanceState)
         setContent {
@@ -61,10 +62,15 @@ class SignUpActivity : AppCompatActivity() {
                 onLoginClick = {
                     startActivity(Intent(this, LoginActivity::class.java))
                 },
-                onSignUpClick = { email, password ->
+                onSignUpClick = { name, email, password ->
                     auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
+                                val user = auth.currentUser
+                                val profile = userProfileChangeRequest {
+                                    displayName = name
+                                }
+                                user?.updateProfile(profile)
                                 Toast.makeText(this, "Signup Successful", Toast.LENGTH_SHORT)
                                     .show()
                                 val intent = Intent(this, LoginActivity::class.java)
@@ -85,7 +91,7 @@ class SignUpActivity : AppCompatActivity() {
 @Composable
 fun SignUpScreen(
     onLoginClick: () -> Unit,
-    onSignUpClick: (email: String, password: String) -> Unit
+    onSignUpClick: (name: String, email: String, password: String) -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -105,8 +111,8 @@ fun SignUpScreen(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF9DFD94), // light green top
-                            Color(0xFF939726)  // olive green bottom
+                            Color(0xFFF4FFFF),
+                            Color(0xFFD2FDFF)
                         )
                     )
                 )
@@ -223,14 +229,14 @@ fun SignUpScreen(
                                     }
 
                                     else -> {
-                                        onSignUpClick(email, password)
+                                        onSignUpClick(name, email, password)
                                     }
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF00C452), // Background color
-                                contentColor = Color.White           // Text/icon color
+                                containerColor = colorResource(R.color.lightBlue),
+                                contentColor = Color.White
                             )
                         ) {
                             Text("Create account", fontSize = 18.sp)
@@ -242,7 +248,7 @@ fun SignUpScreen(
                                 withStyle(
                                     style = SpanStyle(
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Blue
+                                        color = Color.Black
                                     )
                                 ) {
                                     append("Sign in")

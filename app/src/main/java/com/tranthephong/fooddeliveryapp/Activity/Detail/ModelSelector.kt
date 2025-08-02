@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,6 +27,18 @@ fun ModelSelector(
     selectedModelIndex: Int,
     onModelSelected: (Int) -> Unit
 ) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .padding(horizontal = 16.dp)
+    ) {
+        androidx.compose.material3.Text(
+            text = "Select category",
+            fontSize = 20.sp,
+            modifier = Modifier.weight(1f)
+        )
+    }
     LazyRow(
         modifier = Modifier
             .padding(vertical = 8.dp),

@@ -49,16 +49,6 @@ fun InfoSection(item: ItemsModel) {
             contentDescription = null,
             modifier = Modifier.padding(end = 8.dp)
         )
-        Text(text = "${item.rating}", style = MaterialTheme.typography.bodyMedium)
-    }
-    Row(verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(text = "Select category",
-            fontSize = 20.sp,
-            modifier = Modifier.weight(1f)
-        )
+        Text(text = "${item.rating}", style = MaterialTheme.typography.bodyMedium, fontSize = 22.sp)
     }
 }

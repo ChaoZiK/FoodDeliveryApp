@@ -1,9 +1,5 @@
 package com.tranthephong.fooddeliveryapp.Activity.Profile
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,23 +18,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.tranthephong.fooddeliveryapp.Activity.Home.BottomMenu
 import com.tranthephong.fooddeliveryapp.R
 
 @Composable
 fun ProfileScreen(
     onHomeClick: () -> Unit = {},
     onCartClick: () -> Unit = {},
-    onFavoriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {},
+    onOrdersClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onAccountInfoClick: () -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
     ) {
         val (content, bottomBar) = createRefs()
 
-        // Main content (scrollable or static content)
         Column(
             modifier = Modifier
                 .constrainAs(content) {
@@ -48,14 +46,13 @@ fun ProfileScreen(
                     bottom.linkTo(bottomBar.top)
                 }
                 .fillMaxWidth()
-                .padding(bottom = 16.dp) // give some spacing from bottom bar
+                .padding(bottom = 16.dp)
         ) {
-            // Header background with circle avatar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .background(Color(0xFFE0FFFF)), // Light cyan
+                    .background(Color(0xFFE0FFFF)),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
@@ -67,30 +64,28 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Menu card
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(modifier = Modifier.padding(vertical = 16.dp)) {
                     ProfileMenuItem(
                         iconRes = R.drawable.personal_infor,
                         label = "Personal information",
-                        onClick = { /* TODO */ }
+                        onClick = onAccountInfoClick
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     ProfileMenuItem(
                         iconRes = R.drawable.orders,
                         label = "Orders",
-                        onClick = { /* TODO */ }
+                        onClick = onOrdersClick
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     ProfileMenuItem(
                         iconRes = R.drawable.logout,
                         label = "Logout",
-                        onClick = { /* TODO */ }
+                        onClick = onLogoutClick
                     )
                 }
             }

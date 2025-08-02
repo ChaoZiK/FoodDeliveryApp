@@ -1,11 +1,9 @@
 package com.tranthephong.fooddeliveryapp.Activity.Cart
 
-import android.R.attr.background
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,11 +21,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberAsyncImagePainter
-import com.tranthephong.fooddeliveryapp.Helper.ChangeNumberItemsListener
 import com.tranthephong.fooddeliveryapp.Helper.ManagementCart
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
@@ -38,8 +36,7 @@ fun CartList(
     managementCart: ManagementCart,
     onItemChange: () -> Unit
 ) {
-    LazyColumn(Modifier.padding(top = 16.dp)
-    ) {
+    LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
         items(cartItems) { item ->
             CartItem(
                 cartItems,
@@ -61,7 +58,7 @@ fun CartItem(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
+            .padding(bottom = 24.dp)
     ) {
         val (pic, titleTxt, feeEachTime, totalEachTime, Quantity) = createRefs()
 
@@ -82,73 +79,82 @@ fun CartItem(
                     bottom.linkTo(parent.bottom)
                 }
         )
-        Text(text = item.title,
+        Text(
+            text = item.title,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .constrainAs(titleTxt) {
                     start.linkTo(pic.end)
                     top.linkTo(pic.top)
                 }
-                .padding(start = 8.dp, top = 8.dp)
+                .padding(start = 8.dp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
-        Text(text = "$${item.price}", color = colorResource(R.color.green),
+        Text(
+            text = "$${item.price}", color = colorResource(R.color.green),
             modifier = Modifier
                 .constrainAs(feeEachTime) {
                     start.linkTo(titleTxt.start)
                     top.linkTo(titleTxt.bottom)
                 }
-                .padding(start = 8.dp, top = 8.dp)
+                .padding(start = 8.dp, top = 4.dp)
         )
-        Text(text = "$${item.numberInCart*item.price}",
+        Text(
+            text = "$${item.numberInCart * item.price}",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .constrainAs(totalEachTime) {
-                    start.linkTo(titleTxt.start)
-                    top.linkTo(pic.bottom)
+                    start.linkTo(pic.end)
+                    bottom.linkTo(pic.bottom)
 
                 }
                 .padding(start = 8.dp)
         )
-        ConstraintLayout(modifier = Modifier
-            .width(100.dp)
-            .constrainAs(Quantity){
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-            }
-            .background(colorResource(R.color.lightGrey),
-                shape = RoundedCornerShape(100.dp)
-            )
+        ConstraintLayout(
+            modifier = Modifier
+                .width(100.dp)
+                .constrainAs(Quantity) {
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+                .background(
+                    colorResource(R.color.lightGrey),
+                    shape = RoundedCornerShape(100.dp)
+                )
         ) {
             val (plusCartbtn, minusCartbtn, numberItemText) = createRefs()
-            Text(text = item.numberInCart.toString(),
+            Text(
+                text = item.numberInCart.toString(),
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.constrainAs(numberItemText){
+                modifier = Modifier.constrainAs(numberItemText) {
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                 }
             )
-            Box(modifier = Modifier
-                .padding(2.dp)
-                .size(28.dp)
-                .background(
-                    colorResource(R.color.green),
-                    shape = RoundedCornerShape(100.dp)
-                )
-                .constrainAs(plusCartbtn){
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-                .clickable {
-                    managementCart.plusItem(
-                        cartItems,
-                        cartItems.indexOf(item)
-                    ) { onItemChange() }
-                }
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .size(28.dp)
+                    .background(
+                        colorResource(R.color.black),
+                        shape = RoundedCornerShape(100.dp)
+                    )
+                    .constrainAs(plusCartbtn) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .clickable {
+                        managementCart.plusItem(
+                            cartItems,
+                            cartItems.indexOf(item)
+                        ) { onItemChange() }
+                    }
             ) {
                 Text(
                     text = "+",
@@ -158,28 +164,29 @@ fun CartItem(
                 )
             }
 
-            Box(modifier = Modifier
-                .padding(2.dp)
-                .size(28.dp)
-                .background(
-                    colorResource(R.color.white),
-                    shape = RoundedCornerShape(100.dp)
-                )
-                .constrainAs(minusCartbtn){
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-                .clickable {
-                    managementCart.minusItem(
-                        cartItems,
-                        cartItems.indexOf(item)
-                    ) { onItemChange() }
-                }
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .size(28.dp)
+                    .background(
+                        colorResource(R.color.white),
+                        shape = RoundedCornerShape(100.dp)
+                    )
+                    .constrainAs(minusCartbtn) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .clickable {
+                        managementCart.minusItem(
+                            cartItems,
+                            cartItems.indexOf(item)
+                        ) { onItemChange() }
+                    }
             ) {
                 Text(
                     text = "-",
-                    color = Color.Green,
+                    color = Color.Black,
                     modifier = Modifier.align(Alignment.Center),
                     textAlign = TextAlign.Center
                 )

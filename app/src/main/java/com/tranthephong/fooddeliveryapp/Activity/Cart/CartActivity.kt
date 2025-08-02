@@ -1,11 +1,5 @@
 package com.tranthephong.fooddeliveryapp.Activity.Cart
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,32 +13,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.database.core.Constants
-import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.Helper.ManagementCart
-import com.tranthephong.fooddeliveryapp.R
 
 @Composable
-fun CartScreen() {
+fun CartScreen(
+    onItemChange: () -> Unit,
+    onCheckout: () -> Unit
+) {
     val context = LocalContext.current
     val managementCart = remember { ManagementCart(context) }
     var cartItem = remember { mutableStateOf(managementCart.getListCart()) }
-    val tax = remember {mutableStateOf(0.0)}
-    
-//    // Add LaunchedEffect to update cart items when screen is shown
-//    LaunchedEffect(Unit) {
-//        cartItem.value = managementCart.getListCart()
-//    }
-//
-    // Add effect to update tax when cart items change
+    val tax = remember { mutableStateOf(0.0) }
+
     LaunchedEffect(cartItem.value) {
         calculatorCart(managementCart, tax)
     }
@@ -55,8 +40,10 @@ fun CartScreen() {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        ConstraintLayout(modifier = Modifier.padding(top=36.dp).fillMaxWidth()){
-            val (backBtn, cartTxt) = createRefs()
+        ConstraintLayout(modifier = Modifier
+            .padding(top = 20.dp)
+            .fillMaxWidth()) {
+            val (cartTxt) = createRefs()
             Text(
                 modifier = Modifier
                     .constrainAs(cartTxt) {
@@ -69,8 +56,11 @@ fun CartScreen() {
                 fontSize = 25.sp
             )
         }
-        if(cartItem.value.isEmpty()){
-            Text(text = "Your cart is empty", modifier = Modifier.align(Alignment.CenterHorizontally))
+        if (cartItem.value.isEmpty()) {
+            Text(
+                text = "Your cart is empty",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         } else {
             CartList(cartItems = cartItem.value, managementCart) {
                 cartItem.value = managementCart.getListCart()
@@ -79,7 +69,8 @@ fun CartScreen() {
             CartSummary(
                 itemTotal = managementCart.getTotalFee(),
                 tax = tax.value,
-                delivery = 10.0
+                delivery = 10.0,
+                onCheckout = onCheckout
             )
         }
     }
@@ -87,5 +78,5 @@ fun CartScreen() {
 
 fun calculatorCart(managementCart: ManagementCart, tax: MutableState<Double>) {
     val percentTax = 0.02
-    tax.value = Math.round((managementCart.getTotalFee()*percentTax)*100)/100.0
+    tax.value = Math.round((managementCart.getTotalFee() * percentTax) * 100) / 100.0
 }

@@ -1,7 +1,6 @@
 package com.tranthephong.fooddeliveryapp.Activity.Favorite
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,13 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.tranthephong.fooddeliveryapp.Model.ItemsModel
-import com.tranthephong.fooddeliveryapp.R
 
 @Composable
 fun FavoriteItemRow(
@@ -36,27 +34,27 @@ fun FavoriteItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(item) }
-            .padding(12.dp),
+            .padding(bottom = 24.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Thumbnail
         Image(
             painter = rememberAsyncImagePainter(item.picUrl.firstOrNull()),
             contentDescription = item.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(80.dp)
+                .size(90.dp)
                 .clip(RoundedCornerShape(8.dp))
         )
 
         Spacer(Modifier.width(16.dp))
 
-        // Title + Price
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = item.title,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(Modifier.height(4.dp))
             Text(

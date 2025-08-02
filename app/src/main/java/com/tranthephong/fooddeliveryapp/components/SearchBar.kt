@@ -1,6 +1,5 @@
 package com.tranthephong.fooddeliveryapp.components
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +23,7 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     TextField(
         value = query,
         onValueChange = onQueryChange,
@@ -32,7 +31,7 @@ fun SearchBar(
         trailingIcon = {
             IconButton(onClick = onSearchClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.search), // Replace with your icon file name
+                    painter = painterResource(id = R.drawable.search),
                     contentDescription = "Search",
                     tint = Color.Black
                 )
