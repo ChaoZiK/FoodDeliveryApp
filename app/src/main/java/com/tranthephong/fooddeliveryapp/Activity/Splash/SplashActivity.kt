@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,25 +32,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.tranthephong.fooddeliveryapp.Activity.Authentication.LoginActivity
+import com.tranthephong.fooddeliveryapp.Activity.Authentication.SignUpActivity
 import com.tranthephong.fooddeliveryapp.Activity.BaseActivity
 import com.tranthephong.fooddeliveryapp.MainActivity
 import com.tranthephong.fooddeliveryapp.R
 import com.tranthephong.fooddeliveryapp.Util.RememberPrefs
 
 
-//import com.tranthephong.fooddeliveryapp.Activity.Dashboard.MainActivity
 class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (!RememberPrefs.isFirstLaunch(this)) {
-            routeUser()          // immediately jump to Login/Home
-            return               // DON’T call setContent
+            routeUser()
+            return
         }
 
         setContent {
             SplashScreen(
-                onClick = {
+                onSignUpClick = {
+                    RememberPrefs.setOnboardingDone(this)
+                    startActivity(Intent(this, SignUpActivity::class.java))
+                },
+                onLoginClick = {
                     RememberPrefs.setOnboardingDone(this)
                     startActivity(Intent(this, LoginActivity::class.java))
                 }
@@ -59,7 +65,7 @@ class SplashActivity : BaseActivity() {
     private fun routeUser() {
         val target = if (
             RememberPrefs.shouldAutoLogin(this) && FirebaseAuth.getInstance().currentUser != null
-        ){
+        ) {
             MainActivity::class.java
         } else {
             LoginActivity::class.java
@@ -70,64 +76,87 @@ class SplashActivity : BaseActivity() {
     }
 }
 
-@Composable
 @Preview
-fun SplashScreen(onClick:()-> Unit={}){
+@Composable
+fun SplashScreen(
+    onSignUpClick: () -> Unit = {},
+    onLoginClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.green))
+            .background(colorResource(R.color.backgroundBlue))
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         Image(
-            painter=painterResource(R.drawable.cart),
+            painter = painterResource(R.drawable.splash_food),
             contentDescription = null,
             modifier = Modifier
-                .padding(top=48.dp)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .size(300.dp),
             contentScale = ContentScale.Fit
         )
-        Text(text="Satisfy Your Cravings with Our\n" +
-                " Fresh Cakes, Donuts\n" +
-                " and Pastries",
-            color = colorResource(R.color.black),
-            textAlign = TextAlign.Center, fontSize = 26.sp,
-            fontWeight = FontWeight.SemiBold,
+
+        Text(
+            text = "Make Your Own Food\nStay at Home",
+            color = colorResource(R.color.strongBlue),
+            textAlign = TextAlign.Center,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
             lineHeight = 40.sp,
-            modifier = Modifier.padding(top=16.dp))
-        Text(text="Browse the best edibles from top seller\n" +
-                " Get personalized recommendations\n" +
-                " Enjoy fast, free shipping",
+            modifier = Modifier.padding(top = 32.dp)
+        )
+
+        Text(
+            text = "Select your preferred dish from our app and enjoy a delightful culinary experience today!",
             color = colorResource(R.color.black),
-            textAlign = TextAlign.Center, fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
             lineHeight = 30.sp,
-            modifier = Modifier.padding(top=16.dp))
-        Button(onClick={onClick()},
-            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .padding(top = 16.dp, bottom = 32.dp)
+                .padding(horizontal = 16.dp)
+        )
+
+        Button(
+            onClick = onSignUpClick,
+            shape = RoundedCornerShape(200.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.teal_200)
+                containerColor = colorResource(R.color.lightBlue)
             ),
             modifier = Modifier
-                .padding(top=16.dp)
-            .fillMaxWidth()
-            .height(50.dp)
-        )
-        {
+                .padding(top = 32.dp)
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 16.dp)
+        ) {
             Text(
-                text = "Let's Get Started",
+                text = "Sign Up",
                 fontSize = 18.sp,
                 color = Color.White
             )
         }
-        Text(
-            text = "Already have an account? Sign In ",
-            color = colorResource(R.color.white),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            lineHeight = 30.sp,
-            modifier = Modifier.padding(top=16.dp)
-        )
+
+        Button(
+            onClick = onLoginClick,
+            shape = RoundedCornerShape(200.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.white)
+            ),
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(horizontal = 16.dp)
+        ) {
+            Text(
+                text = "Login",
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+        }
     }
 }

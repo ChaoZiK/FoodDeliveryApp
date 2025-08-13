@@ -12,4 +12,6 @@
     <color name="grey">#919191</color>
     <color name="lightGrey">#efefef</color>
     <color name="lightBlue">#06D3EA</color>
+    <color name="strongBlue">#0745B9</color>
+    <color name="backgroundBlue">#D6FCFF</color>
 </resources>

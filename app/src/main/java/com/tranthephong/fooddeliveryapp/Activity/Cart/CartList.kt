@@ -31,24 +31,6 @@ import com.tranthephong.fooddeliveryapp.Model.ItemsModel
 import com.tranthephong.fooddeliveryapp.R
 
 @Composable
-fun CartList(
-    cartItems: ArrayList<ItemsModel>,
-    managementCart: ManagementCart,
-    onItemChange: () -> Unit
-) {
-    LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
-        items(cartItems) { item ->
-            CartItem(
-                cartItems,
-                item = item,
-                managementCart = managementCart,
-                onItemChange = onItemChange
-            )
-        }
-    }
-}
-
-@Composable
 fun CartItem(
     cartItems: ArrayList<ItemsModel>,
     item: ItemsModel,

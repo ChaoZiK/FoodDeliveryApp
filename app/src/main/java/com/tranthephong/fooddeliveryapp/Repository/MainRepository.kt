@@ -27,7 +27,6 @@ class MainRepository {
                     val item = data.getValue(SliderModel::class.java)
                     item?.let { lists.add(it) }
                 }
-                Log.d("FIREBASE_DEBUG", "Banner list size: ${lists.size}")
                 listData.value = lists
             }
 

@@ -1,9 +1,11 @@
 package com.tranthephong.fooddeliveryapp.Activity.Cart
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,12 +14,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.tranthephong.fooddeliveryapp.Helper.ManagementCart
 
 @Composable
@@ -35,43 +37,59 @@ fun CartScreen(
     }
 
     calculatorCart(managementCart, tax)
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        ConstraintLayout(modifier = Modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth()) {
-            val (cartTxt) = createRefs()
+        item {
             Text(
+                "Your Cart",
                 modifier = Modifier
-                    .constrainAs(cartTxt) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                    }, text = "Your Cart",
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 16.dp),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
             )
         }
+
         if (cartItem.value.isEmpty()) {
-            Text(
-                text = "Your cart is empty",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        } else {
-            CartList(cartItems = cartItem.value, managementCart) {
-                cartItem.value = managementCart.getListCart()
-                calculatorCart(managementCart, tax)
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Your cart is empty",
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        color = Color.Gray
+                    )
+                }
             }
-            CartSummary(
-                itemTotal = managementCart.getTotalFee(),
-                tax = tax.value,
-                delivery = 10.0,
-                onCheckout = onCheckout
-            )
+        } else {
+            items(items = cartItem.value, key = { it.id }) { item ->
+                CartItem(
+                    cartItems = cartItem.value,
+                    item = item,
+                    managementCart = managementCart
+                ) {
+                    cartItem.value = managementCart.getListCart()
+                    calculatorCart(managementCart, tax)
+                    onItemChange()
+                }
+            }
+
+            item {
+                CartSummary(
+                    itemTotal = managementCart.getTotalFee(),
+                    tax = tax.value,
+                    delivery = 10.0,
+                    onCheckout = onCheckout
+                )
+            }
         }
     }
 }

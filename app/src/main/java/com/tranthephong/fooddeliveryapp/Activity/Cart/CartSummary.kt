@@ -45,7 +45,7 @@ fun CartSummary(
                 fontWeight = FontWeight.Bold,
                 color = colorResource(R.color.black)
             )
-            Text(text = "$$itemTotal", fontWeight = FontWeight.Bold)
+            Text(text = "\$${"%.2f".format(itemTotal)}", fontWeight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier
@@ -58,7 +58,7 @@ fun CartSummary(
                 fontWeight = FontWeight.Bold,
                 color = colorResource(R.color.black)
             )
-            Text(text = "$$tax", fontWeight = FontWeight.Bold)
+            Text(text = "\$${"%.2f".format(tax)}", fontWeight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier
@@ -89,9 +89,10 @@ fun CartSummary(
                 text = "Total:",
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.Bold,
-                color = colorResource(R.color.black)
+                color = colorResource(R.color.black),
+                fontSize = 26.sp
             )
-            Text(text = "$$total", fontWeight = FontWeight.Bold)
+            Text(text = "\$${"%.2f".format(total)}", fontWeight = FontWeight.Bold, fontSize = 26.sp)
         }
 
         Button(
@@ -106,7 +107,7 @@ fun CartSummary(
                 .height(50.dp)
         ) {
             Text(
-                "Checkout • \$${"%.2f".format(total)}",
+                "Checkout",
                 fontSize = 18.sp,
                 color = colorResource(R.color.white)
             )
