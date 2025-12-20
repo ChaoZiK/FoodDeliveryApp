@@ -37,3 +37,8 @@ The app follows the **MVVM** (Model-View-ViewModel) architecture pattern:
 To run the app locally, clone the repository and open the project in Android Studio or any proper editor.
 ```bash
 https://github.com/ChaoZiK/FoodDeliveryApp.git
+```
+
+## License
+
+This project is for learning/demo purposes.
