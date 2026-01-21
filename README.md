@@ -33,15 +33,15 @@ The **Food Delivery App** is a mobile application built with **Kotlin** for Andr
   <tr>
     <td align="center">
       <img src="images/home.png" width="220" /><br/>
-      <sub>Home / categories & highlights</sub>
+      <sub>Home screen</sub>
     </td>
     <td align="center">
       <img src="images/product.png" width="220" /><br/>
-      <sub>Product detail / add to cart</sub>
+      <sub>Product detail</sub>
     </td>
     <td align="center">
       <img src="images/favorites.png" width="220" /><br/>
-      <sub>Favorites items</sub>
+      <sub>Favorites screen</sub>
     </td>
     <td align="center">
       <img src="images/cart.png" width="220" /><br/>
