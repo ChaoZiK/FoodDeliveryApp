@@ -4,6 +4,70 @@
 
 The **Food Delivery App** is a mobile application built with **Kotlin** for Android. The app allows users to browse through various food categories, add items to the cart, manage their orders, and proceed to checkout. It is built using the **MVVM architecture** to ensure separation of concerns and maintainable code.
 
+## Demo
+
+### Authentication
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/login.png" width="220" /><br/>
+      <sub>Login screen</sub>
+    </td>
+    <td align="center">
+      <img src="images/signup.png" width="220" /><br/>
+      <sub>Sign up screen</sub>
+    </td>
+    <td align="center">
+      <img src="images/forgot_password.png" width="220" /><br/>
+      <sub>Forgot password screen</sub>
+    </td>
+    <td align="center">
+      <img src="images/forgot_password_confirm.png" width="220" /><br/>
+      <sub>Reset password confirmation</sub>
+    </td>
+  </tr>
+</table>
+
+### Browsing and Ordering
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/home.png" width="220" /><br/>
+      <sub>Home / categories & highlights</sub>
+    </td>
+    <td align="center">
+      <img src="images/product.png" width="220" /><br/>
+      <sub>Product detail / add to cart</sub>
+    </td>
+    <td align="center">
+      <img src="images/favorites.png" width="220" /><br/>
+      <sub>Favorites items</sub>
+    </td>
+    <td align="center">
+      <img src="images/cart.png" width="220" /><br/>
+      <sub>Cart management</sub>
+    </td>
+  </tr>
+</table>
+
+### Settings
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/setting.png" width="220" /><br/>
+      <sub>Settings</sub>
+    </td>
+    <td align="center">
+      <img src="images/order_history.png" width="220" /><br/>
+      <sub>Order history</sub>
+    </td>
+    <td align="center">
+      <img src="images/account_information.png" width="220" /><br/>
+      <sub>Account information</sub>
+    </td>
+  </tr>
+</table>
+
 ## Features
 
 - **User Authentication**: Login and registration functionality.
