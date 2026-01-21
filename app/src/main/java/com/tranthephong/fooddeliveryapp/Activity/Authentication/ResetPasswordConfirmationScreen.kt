@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import com.tranthephong.fooddeliveryapp.R
+
 
 private val PrimaryCyan = Color(0xFF04D4E0)
 
@@ -59,25 +62,26 @@ fun ResetPasswordConfirmationScreen(
         Spacer(Modifier.height(48.dp))
 
         Card(
-            border = BorderStroke(2.dp, PrimaryCyan),
             shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     "We've sent a link to your email address " +
                             "with instructions to reset your password.\nPlease check your inbox!",
                     fontSize = 15.sp,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(Modifier.height(16.dp))
 
                 Image(
-                    painter = painterResource(R.drawable.back_arrow),
+                    painter = painterResource(R.drawable.mail_check),
                     contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
